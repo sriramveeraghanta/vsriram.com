@@ -7,6 +7,8 @@ export default defineConfig({
   site: 'https://vsriram.me',
   output: 'static',
   trailingSlash: 'never',
+  // Astro 7 defaults to 'jsx', which strips spaces between inline elements; keep v6 output.
+  compressHTML: true,
   integrations: [tailwind({ applyBaseStyles: false }), mdx(), sitemap()],
   markdown: {
     shikiConfig: {
