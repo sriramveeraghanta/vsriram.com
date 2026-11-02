@@ -36,7 +36,7 @@ Cloudflare Pages builds from the default branch:
 
 - Build command: `pnpm build`
 - Output directory: `dist`
-- Node version: 20
+- Node version: 24 (from `.nvmrc`)
 
 ## License
 
