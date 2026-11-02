@@ -1,0 +1,170 @@
+---
+title: "The Bottleneck Moved"
+description: "AI coding agents made writing code cheap, but features aren't shipping eight times faster. The time moved to review and infrastructure, and that's where the next wave of tools is heading."
+publishedAt: 2026-11-02
+draft: false
+tags: ["ai", "engineering", "devops"]
+---
+
+When Claude Code first came out, most developers I know treated it as
+a toy. You tried it on a weekend project, maybe let it scaffold a few
+tests. Within months it had moved into everyone's daily workflow.
+Today I rarely meet an engineer who doesn't use an AI coding agent for
+at least part of their work.
+
+The recent Opus releases pushed this further still. Writing code has
+become a commodity. A few years ago that sentence would have sounded
+absurd to me, but I don't know a better way to describe what I'm
+seeing.
+
+What convinced me was watching product managers. I've seen PMs take a
+customer conversation in the morning and by the afternoon have a
+working prototype in real code, wired up and doing what the customer
+asked for. Some of those prototypes were better than what a developer
+with a few years of experience would have built, because the PM
+understood the problem more deeply and could now put that
+understanding straight into code. The gap between knowing what to
+build and building it has almost closed, and that changes a lot more
+than how fast we type.
+
+## So are we shipping more?
+
+Yes, though less than you'd think. A small feature that used to take
+three days to build now takes about three hours. If you only measured
+from "I opened my editor" to "it works on my machine," you'd conclude
+we're shipping many times faster than before.
+
+Writing the code was always only one part of building a feature.
+Before any code exists, someone has to decide what the feature should
+do, how it fits into the existing system, and what it shouldn't do.
+After the code exists, someone has to review it, test it, deploy it,
+and watch it in production. None of those steps got meaningfully
+faster.
+
+A typical feature used to take about a week and now takes about four
+days:
+
+| Stage                     | Before           | Now               |
+| ------------------------- | ---------------- | ----------------- |
+| Design                    | 1 day            | 1 day             |
+| Development               | 3 days           | 3 hours           |
+| Review and back-and-forth | 2 days           | 2 days            |
+| Deploy and verify         | 1 day            | 1 day             |
+| **Total**                 | **About a week** | **About 4 days**  |
+
+That's a real improvement, but it's nowhere near the 8x you'd expect
+from looking at the coding step alone. Most of the time that's left
+sits in review and deployment, which is where the bottleneck went.
+
+## The first new bottleneck: review
+
+For most of my career, writing code was the slow part, and review was
+something you squeezed in between your own tasks. Now review is the
+slow part.
+
+When one developer can produce in an afternoon what used to take a
+week, pull requests pile up. Someone still has to read every diff,
+work out what it does, and decide whether it's safe to merge. That
+someone is usually a senior engineer, and there are only so many of
+them.
+
+Reviewing AI-written code is also harder than it looks. Cheap
+generation means more of it, so a change a human would have kept to
+50 lines often arrives as 500. The code usually looks right, too:
+clean, well named and confidently structured. That polish makes the
+subtle mistakes easier to miss, like an edge case nobody handled, a
+query that's fine on test data and falls over at scale, or a
+permission check in the wrong place.
+
+The author may also not fully understand what they're submitting.
+When someone writes code by hand, review is a conversation between two
+people who both know the code. When the code was generated, the
+reviewer is sometimes the first person to think it through carefully.
+
+AI-written code is often better than what people write by hand. But
+people are still responsible for its correctness, security and
+maintainability, so how fast reviewers can understand the code now
+limits how fast a team ships.
+
+## The second new bottleneck: everything around the code
+
+The other place time piles up is the stretch between "it works on my
+machine" and "it's running in production."
+
+A new service rarely ships on its own. It needs a Dockerfile,
+Kubernetes manifests for the deployment, service, ingress, config maps
+and secrets, and a CI pipeline that builds it, tests it and pushes the
+image. It probably also needs Helm charts or Terraform, alerting rules,
+dashboards and a rollback plan. Most of that is YAML, and most of the
+YAML is specific to how your company happens to run things.
+
+AI can write a lot of this too, but infrastructure is less forgiving
+than application code. A bug in a feature breaks one screen. A wrong
+value in a deployment config can take down a cluster, leak a secret,
+or double your cloud bill without anyone noticing. Infrastructure is
+also hard to test locally, so you often only find out it's wrong once
+it's live.
+
+So teams are careful here, and they should be. The result is that
+infrastructure still moves at human speed while the code it's meant to
+ship moves at machine speed.
+
+## Where the next wave is going
+
+Money and talent tend to follow the bottleneck. In the last year I've
+seen hundreds of startups built on one idea: reviewing code. Some
+summarize pull requests or flag risky changes before a human looks;
+others try to catch security issues, performance regressions or broken
+conventions automatically. The pitch is always a version of the same
+thing: AI made writing code fast, so let AI make reviewing it fast
+too.
+
+I'm also starting to see a handful of platforms go after
+infrastructure as code. They take the Docker, Kubernetes and pipeline
+work that every team rebuilds from scratch and generate it from a
+description: you tell the platform what your service needs, and it
+writes the manifests.
+
+I don't think any of these will take people out of the loop, at least
+not soon. Someone still has to own the decision to ship. But tools
+that let one reviewer handle ten pull requests instead of three, or
+turn two days of deployment setup into two hours, are where the next
+real speedup for the whole lifecycle will come from.
+
+## What this means for developers
+
+If writing code isn't the scarce skill anymore, what is? The
+developers I see doing well right now lean on other strengths:
+
+- Judgment about what to build, what not to build, and when a
+  generated solution is solving the wrong problem.
+- Reading code critically: looking at 500 lines you didn't write and
+  spotting the one assumption that will break in production.
+- Understanding how a change ripples through the database, the queue,
+  the cache and the services that depend on them.
+- Knowing how things run, fail and recover in production, which is
+  exactly what the infrastructure bottleneck demands.
+- Staying close to customers. The PMs I mentioned are fast because
+  they understand the problem, and developers who talk to users get
+  the same advantage.
+
+None of these skills are new, and good senior engineers always had
+them. They used to be a bonus on top of writing code; now they are
+the job.
+
+## An interesting time to be a developer
+
+I'm a developer at heart. Writing code is the thing I spent years
+getting good at, and it's the thing AI has made least scarce. By any
+logic I should be worried. Instead, for the first time in my career,
+I'm excited about what comes next. The boring parts of the job are
+shrinking, and the interesting parts, figuring out what to build and
+making sure it works for real people, take up more of the day.
+
+We're in the middle of a shift that will change how software gets
+made, who gets to make it, and what being a developer even means.
+Whether that turns out to be for the greater good or our collective
+demise, I guess we'll find out together.
+
+I'd love to hear what you're seeing. Where's the bottleneck on your
+team right now?
